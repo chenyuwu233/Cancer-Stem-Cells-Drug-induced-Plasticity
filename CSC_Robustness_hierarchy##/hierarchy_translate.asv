@@ -1,0 +1,23 @@
+%% This is a function to translate the parameters for 2-type hierarchy model 
+
+function ret = hierarchy_translate(theta,max_cap)
+    c = theta(end);
+    theta(end) = [];
+    if max_cap == 0
+        ret = theta;
+    else
+        THETA = reshape(theta,[],2)';
+        Drug_mat = ;
+        Cell_mat = [THETA(1,1:3),zeros(1,max_cap)];
+        modified_Cell_vec = [0,THETA(2,2:3)];
+        modified_Cell_mat = repmat(modified_Cell_vec,max_cap+1,1);
+        modified_Cell_mat = [modified_Cell_mat,THETA(2,1)*eye(max_cap+1)];
+        modified_Cell_mat(:,end) = [];
+        modified_Cell_mat
+        Cell_mat
+        Cell_mat = [Cell_mat;modified_Cell_mat];
+        THATA = [Cell_mat,Drug_mat];
+        ret = [reshape(THETA',1,[]),c];
+    end
+
+end

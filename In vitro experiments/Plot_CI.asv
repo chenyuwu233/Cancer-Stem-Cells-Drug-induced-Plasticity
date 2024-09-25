@@ -1,0 +1,345 @@
+%% no ip info
+load('Result\In_vitro_AIC_BaF3_21_CI_selective.mat')
+load('Result\In_vitro_AIC_BaF3_21_CI.mat')
+opt_xx_hist_DIP_Asy = opt_xx_hist;
+opt_xx_hist_DIP_nAsy_all = opt_xx_hist_DIP_nAsy;
+load('Result\In_vitro_AIC_BaF3_21_CI_aug.mat')
+load('Result\In_vitro_AIC_BaF3_21_CI_selective_aug.mat')
+opt_xx_hist_DIP_nAsy_all = [opt_xx_hist_DIP_nAsy_all;opt_xx_hist_DIP_nAsy];
+opt_xx_hist_DIP_Asy = [opt_xx_hist_DIP_Asy;opt_xx_hist];
+
+
+models_name = ['Model 1','Model 2','Model 3']; % Model 1 natural plasticity only, Model 2 DIP only, Model 3 both.
+
+
+%% ip info
+load('Result\In_vitro_AIC_BaF3_21_CI_ip.mat')
+opt_xx_hist_DIP_Asy_ip = opt_xx_hist;
+load('Result\In_vitro_AIC_BaF3_21_CI_ip_aug.mat')
+opt_xx_hist_DIP_Asy_ip = [opt_xx_hist_DIP_Asy_ip;opt_xx_hist];
+
+%% Plots 
+
+
+Asy_M1 = [opt_xx_hist_nDIP_Asy(:,4),opt_xx_hist_nDIP_Asy(:,14)];
+Asy_M2 = [opt_xx_hist_DIP_nAsy(:,4),opt_xx_hist_DIP_nAsy(:,14)];
+Asy_M3 = [opt_xx_hist(:,4),opt_xx_hist(:,14)];
+
+Asy = cat(3,Asy_M1,Asy_M3);
+Asy = permute(Asy,[2,3,1]);
+
+h_Asy = boxplot2(Asy,[1,2])
+
+
+%% Compute the maximum DIP for maximum dosage tested
+
+max_dosage = max(Conc);
+
+DIP = zeros(2,2,50);
+
+for i = 1:50
+    DIP_nAsy = opt_xx_hist_DIP_nAsy(i,:);
+    DIP(1,1,i) = log(DIP_nAsy(8) + (1-DIP_nAsy(8))/(1+(max_dosage/DIP_nAsy(9))^(DIP_nAsy(10))));
+    DIP(2,1,i) = log(DIP_nAsy(18) + (1-DIP_nAsy(18))/(1+(max_dosage/DIP_nAsy(19))^(DIP_nAsy(20))));
+
+
+    DIP_Asy = opt_xx_hist(i,:);
+    DIP(1,2,i) = log(DIP_Asy(8) + (1-DIP_Asy(8))/(1+(max_dosage/DIP_Asy(9))^(DIP_Asy(10))));
+    DIP(2,2,i) = log(DIP_Asy(18) + (1-DIP_Asy(18))/(1+(max_dosage/DIP_Asy(19))^(DIP_Asy(20))));
+end
+
+h_DIP = boxplot2(DIP,[1,2])
+
+
+
+
+
+%% Compute the maximum DIP for maximum dosage tested
+
+max_dosage = max(Conc);
+
+DIP_aug = zeros(100,4);
+
+for i = 1:100
+    DIP_Asy = opt_xx_hist_DIP_Asy(i,:);
+    if DIP_Asy(6) > DIP_Asy(16)
+        temp = DIP_Asy(1:10);
+        DIP_Asy(1:10) = DIP_Asy(11:20);
+        DIP_Asy(11:20) = temp;
+    end
+    DIP_aug(i,1) = DIP_Asy(4);
+    DIP_aug(i,2) = DIP_Asy(14);
+    DIP_aug(i,3) = log(DIP_Asy(8) + (1-DIP_Asy(8))/(1+(max_dosage/DIP_Asy(9))^(DIP_Asy(10))));
+    DIP_aug(i,4) = log(DIP_Asy(18) + (1-DIP_Asy(18))/(1+(max_dosage/DIP_Asy(19))^(DIP_Asy(20))));
+end
+
+DIP_aug_ip = zeros(100,4);
+
+for i = 1:100
+    DIP_Asy = opt_xx_hist_DIP_Asy_ip(i,:);
+    if DIP_Asy(6) > DIP_Asy(16)
+        temp = DIP_Asy(1:10);
+        DIP_Asy(1:10) = DIP_Asy(11:20);
+        DIP_Asy(11:20) = temp;
+    end
+    DIP_aug_ip(i,1) = DIP_Asy(4);
+    DIP_aug_ip(i,2) = DIP_Asy(14);
+    DIP_aug_ip(i,3) = log(DIP_Asy(8) + (1-DIP_Asy(8))/(1+(max_dosage/DIP_Asy(9))^(DIP_Asy(10))));
+    DIP_aug_ip(i,4) = log(DIP_Asy(18) + (1-DIP_Asy(18))/(1+(max_dosage/DIP_Asy(19))^(DIP_Asy(20))));
+end
+
+DIP_nAsy = zeros(100,4);
+
+for i = 1:100
+    DIP_Asy = opt_xx_hist_DIP_nAsy_all(i,:);
+    if DIP_Asy(6) > DIP_Asy(16)
+        temp = DIP_Asy(1:10);
+        DIP_Asy(1:10) = DIP_Asy(11:20);
+        DIP_Asy(11:20) = temp;
+    end
+    DIP_nAsy(i,1) = DIP_Asy(4);
+    DIP_nAsy(i,2) = DIP_Asy(14);
+    DIP_nAsy(i,3) = log(DIP_Asy(8) + (1-DIP_Asy(8))/(1+(max_dosage/DIP_Asy(9))^(DIP_Asy(10))));
+    DIP_nAsy(i,4) = log(DIP_Asy(18) + (1-DIP_Asy(18))/(1+(max_dosage/DIP_Asy(19))^(DIP_Asy(20))));
+end
+
+CI = prctile(DIP_aug,[2.5,97.5]);
+CI_ip = prctile(DIP_aug_ip,[2.5,97.5]);
+CI_nAsy = prctile(DIP_nAsy,[2.5,97.5]);
+M = median(DIP_aug);
+M_ip  = median(DIP_aug_ip);
+M_nAsy = median(DIP_nAsy);
+
+
+
+%% Plot the results
+
+% ax = gca;
+% hist(DIP_aug(:,1))
+% xlabel('Maximum drug induced plasticity for resistant')
+
+
+ax = gca;
+x1 = {DIP_aug,DIP_aug_ip};
+
+boxplotGroup(x1,'PrimaryLabels',{'with IP','without IP'}, ...
+'SecondaryLabels', {'$\nu_{sr}$','$\nu_{rs}$','Sensitive DIP','Resistant DIP'})
+
+groupCenters = @(nGroups,nMembers,interGroupSpace) ...
+    nGroups/2+.5 : nGroups+interGroupSpace : (nGroups+interGroupSpace)*nMembers-1;
+x1CenterTicks = groupCenters(numel(x1), size(x1{1},2), 1);
+
+% set(ax,'XTick',x1CenterTicks,'XTickLabels',{'$\nu_{sr}$','$\nu_{rs}$','Sensitive DIP','Resistant DIP'})
+ax.TickLabelInterpreter = 'latex';
+ax.FontSize = 20;
+ax.FontWeight = 'bold';
+ax.YLim = [0,0.2]
+ylabel('Bootstrap estimation values')
+
+
+%%  Scatter plots
+
+label_X = [0,3,6,9];
+
+G1_centerX = label_X - 0.75;
+G2_centerX = label_X ;
+G3_centerX = label_X + 0.75;
+% label_X2 = sort([G1_centerX,G2_centerX]);
+figure;
+hold on
+ax = gca;
+G1_X = linspace(-0.875,-0.625,100);
+X1 = reshape(bsxfun(@plus,G1_X,label_X')',[1,400]);
+% X1 = [G1_X,2+G1_X,4+G1_X,6+G1_X];
+h1 = scatter(X1,reshape(DIP_aug,[400,1]),'blue','filled','o','MarkerFaceAlpha',0.5);
+% scatter(2+G1_X,DIP_aug(:,2),'blue','filled','o','MarkerFaceAlpha',0.5);
+% scatter(4+G1_X,DIP_aug(:,3),'blue','filled','o','MarkerFaceAlpha',0.5);
+% scatter(6+G1_X,DIP_aug(:,4),'blue','filled','o','MarkerFaceAlpha',0.5);
+G2_X = linspace(-0.125,0.125,100);
+X2 = reshape(bsxfun(@plus,G2_X,label_X')',[1,400]);
+h2 = scatter(X2,reshape(DIP_aug_ip,[400,1]),'red','filled','o','MarkerFaceAlpha',0.5);
+% scatter(2+G2_X,DIP_aug_ip(:,2),'red','filled','o','MarkerFaceAlpha',0.5);
+% scatter(4+G2_X,DIP_aug_ip(:,3),'red','filled','o','MarkerFaceAlpha',0.5);
+% scatter(6+G2_X,DIP_aug_ip(:,4),'red','filled','o','MarkerFaceAlpha',0.5);
+G3_X = linspace(0.625,0.875,100);
+X3 = reshape(bsxfun(@plus,G3_X,label_X')',[1,400]);
+h3 = scatter(X3,reshape(DIP_nAsy,[400,1]),'yellow','filled','o','MarkerFaceAlpha',0.5);
+
+errorbar(G1_centerX,M,M-CI(1,:),CI(2,:)-M,'LineWidth',3,'color',[0.6 0.8 1],'CapSize',20,'LineStyle','none')
+errorbar(G2_centerX,M_ip,M_ip-CI_ip(1,:),CI_ip(2,:)-M_ip,'LineWidth',3,'color',[1 0.6 0.2],'CapSize',20,'LineStyle','none')
+errorbar(G3_centerX,M_nAsy,M_nAsy-CI_nAsy(1,:),CI_nAsy(2,:)-M_nAsy,'LineWidth',3,'color',[0.6 0.2 1],'CapSize',20,'LineStyle','none')
+% errorbar(-0.5,M(1),M(1)-CI(1,1),CI(2,1)-M(1),'LineWidth',3,'color',[0.6 0.8 1],'CapSize',20)
+% errorbar(1.5,M(2),M(2)-CI(1,2),CI(2,2)-M(2),'LineWidth',3,'color',[0.6 0.8 1],'CapSize',20)
+% errorbar(3.5,M(3),M(3)-CI(1,3),CI(2,3)-M(3),'LineWidth',3,'color',[0.6 0.8 1],'CapSize',20)
+% errorbar(5.5,M(4),M(4)-CI(1,4),CI(2,4)-M(4),'LineWidth',3,'color',[0.6 0.8 1],'CapSize',20)
+
+% errorbar(0.5,M_ip(1),M_ip(1)-CI_ip(1,1),CI_ip(2,1)-M_ip(1),'LineWidth',3,'color',[1 0.6 0.2],'CapSize',20)
+% errorbar(2.5,M_ip(2),M_ip(2)-CI_ip(1,2),CI_ip(2,2)-M_ip(2),'LineWidth',3,'color',[1 0.6 0.2],'CapSize',20)
+% errorbar(4.5,M_ip(3),M_ip(3)-CI_ip(1,3),CI_ip(2,3)-M_ip(3),'LineWidth',3,'color',[1 0.6 0.2],'CapSize',20)
+% errorbar(6.5,M_ip(4),M_ip(4)-CI_ip(1,4),CI_ip(2,4)-M_ip(4),'LineWidth',3,'color',[1 0.6 0.2],'CapSize',20)
+
+
+legend([h1,h2,h3],{'nIP','IP','nAsy'},'Location','best')
+
+xticks(label_X)
+xticklabels({'$\nu_{sr}$','$\nu_{rs}$','\textbf{Sensitive DIP}','\textbf{Resistant DIP}'})
+ylabel('Estimates')
+ax.TickLabelInterpreter = 'latex';
+ax.FontSize = 10;
+ax.FontWeight = 'bold';
+
+% ax2 = axes('Position',ax.Position,...
+%            'XAxisLocation','bottom',...
+%            'YAxisLocation','right',...
+%            'Color','none',...
+%            'XColor','k','YColor','none');
+% 
+% xticks(ax2,label_X2)
+% xticklabels(ax2,{'nIP','IP','nIP','IP','nIP','IP','nIP','IP'})
+
+%%
+
+
+label_X = [0,3,6,9];
+
+G1_centerX = label_X - 0.75;
+G2_centerX = label_X ;
+G3_centerX = label_X + 0.75;
+% label_X2 = sort([G1_centerX,G2_centerX]);
+figure;
+hold on
+ax = gca;
+G2_X = linspace(-0.125,0.125,100);
+X2 = reshape(bsxfun(@plus,G2_X,label_X')',[1,400]);
+h2 = scatter(X2,reshape(DIP_aug_ip,[400,1]),36,[0.2 0.6 0.8],'filled','o','MarkerFaceAlpha',0.5);
+% scatter(2+G2_X,DIP_aug_ip(:,2),'red','filled','o','MarkerFaceAlpha',0.5);
+% scatter(4+G2_X,DIP_aug_ip(:,3),'red','filled','o','MarkerFaceAlpha',0.5);
+% scatter(6+G2_X,DIP_aug_ip(:,4),'red','filled','o','MarkerFaceAlpha',0.5);
+
+
+
+errorbar(G2_centerX,M_ip,M_ip-CI_ip(1,:),CI_ip(2,:)-M_ip,'LineWidth',3,'color',[0.8 0.4 0.2],'CapSize',30,'LineStyle','none')
+
+xticks(label_X)
+xticklabels({'\boldmath$\nu_{sr}$','\boldmath$\nu_{rs}$','\boldmath$\nu_{sr}(5) - \nu_{sr}(0)$','\boldmath$\nu_{rs}(5) - \nu_{rs}(0)$'})
+ylabel('Estimates')
+% ax.YLim = [-0.001,0.02];
+ax.TickLabelInterpreter = 'latex';
+ax.FontSize = 20;
+ax.FontWeight = 'bold';
+
+
+
+%%
+
+
+max_dosage = 5;
+mod_obj = opt_obj_hist(opt_obj_hist>0);
+mod_xx  = opt_xx_hist(opt_obj_hist>0,:);
+
+e_size = length(mod_obj);
+DIP_wr = zeros(e_size,4);
+
+for i = 1:e_size
+    DIP_Asy = mod_xx(i,:);
+    if DIP_Asy(6) > DIP_Asy(16)
+        temp = DIP_Asy(1:10);
+        DIP_Asy(1:10) = DIP_Asy(11:20);
+        DIP_Asy(11:20) = temp;
+    end
+    DIP_wr(i,1) = DIP_Asy(4);
+    DIP_wr(i,2) = DIP_Asy(14);
+    DIP_wr(i,3) = log(DIP_Asy(8) + (1-DIP_Asy(8))/(1+(max_dosage/DIP_Asy(9))^(DIP_Asy(10))));
+    DIP_wr(i,4) = log(DIP_Asy(18) + (1-DIP_Asy(18))/(1+(max_dosage/DIP_Asy(19))^(DIP_Asy(20))));
+    % DIP_Asy(18)
+    % log(DIP_Asy(18) + (1-DIP_Asy(18))/(1+(max_dosage/DIP_Asy(19))^(DIP_Asy(20))))
+    % pause
+end
+
+CI_wr = prctile(DIP_wr,[2.5,97.5]);
+M_wr = median(DIP_wr);
+
+
+
+%% 
+label_X = [0,3,6,9];
+
+G1_centerX = label_X - 0.75;
+G2_centerX = label_X ;
+G3_centerX = label_X + 0.75;
+% label_X2 = sort([G1_centerX,G2_centerX]);
+figure;
+hold on
+ax = gca;
+G2_X = linspace(-0.125,0.125,e_size);
+X2 = reshape(bsxfun(@plus,G2_X,label_X')',[1,4*e_size]);
+h2 = scatter(X2,reshape(DIP_wr,[4*e_size,1]),36,[0.2 0.6 0.8],'filled','o','MarkerFaceAlpha',0.5);
+% scatter(2+G2_X,DIP_aug_ip(:,2),'red','filled','o','MarkerFaceAlpha',0.5);
+% scatter(4+G2_X,DIP_aug_ip(:,3),'red','filled','o','MarkerFaceAlpha',0.5);
+% scatter(6+G2_X,DIP_aug_ip(:,4),'red','filled','o','MarkerFaceAlpha',0.5);
+
+
+
+errorbar(G2_centerX,M_wr,M_wr-CI_wr(1,:),CI_wr(2,:)-M_wr,'LineWidth',3,'color',[0.8 0.4 0.2],'CapSize',30,'LineStyle','none')
+yline(0,'-.')
+
+xticks(label_X)
+xticklabels({'\boldmath$\nu_{sr}$','\boldmath$\nu_{rs}$','\boldmath$\nu_{sr}(5) - \nu_{sr}(0)$','\boldmath$\nu_{rs}(5) - \nu_{rs}(0)$'})
+ylabel('Estimates')
+% ax.YLim = [-0.001,0.02];
+ax.TickLabelInterpreter = 'latex';
+ax.FontSize = 20;
+ax.FontWeight = 'bold';
+
+
+
+
+%%  Profile 12
+
+load('Result\In_vitro_AIC_BaF3_21_profile_nu12.mat')
+
+func_nu12 = opt_obj_hist;
+plot(prof_sample,opt_obj_hist)
+yline(min(opt_obj_hist )+ 1.92)
+
+%% Profile 21
+
+load('Result\In_vitro_AIC_BaF3_21_profile_nu21.mat')
+
+func_nu21 = opt_obj_hist;
+plot(prof_sample,opt_obj_hist)
+yline(min(opt_obj_hist)+ 1.92)
+
+%% Profile local
+
+load('Result\In_vitro_AIC_BaF3_21_YY_ip.mat')
+
+theta = opt_xx_pe_DIP_Asy;
+
+func_hist2 = [];
+
+for i = prof_sample
+    theta_i = theta;
+    theta_i(14) = i;
+    func_hist2 = [func_hist2,func(theta_i)];
+end
+
+
+plot(prof_sample,func_hist2)
+yline(min(func_hist2)+ 1.92)
+
+%%
+
+func_hist3 = [];
+b_sample = linspace(0.5,1.5,20);
+
+for i = b_sample
+    theta_i = theta;
+    theta_i(8) = i;
+    func_hist3 = [func_hist3,func(theta_i)];
+end
+
+
+plot(b_sample,func_hist3)
+yline(min(func_hist3)+ 1.92)
+
