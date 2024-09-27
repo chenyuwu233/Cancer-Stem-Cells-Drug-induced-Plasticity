@@ -13,7 +13,7 @@
 %  Output:
 %  Variance of S(t_i)
 
-function ret = get_Var(init,Sig,vec)
+function ret = get_Var_alt(init,Sig,vec)
     s = size(Sig,3);
     ret = 0;
     if nargin == 3

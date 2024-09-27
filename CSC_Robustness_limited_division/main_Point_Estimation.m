@@ -7,7 +7,7 @@ parpool('local',20)
 warning('off','MATLAB:integral:NonFiniteValue')
 % addpath('C:\Users\euclid\OneDrive\UMN-My-gear\Phenotypic_Switching_model\Switching_model(MATLAB)\Main functions')
 
-seed_num = 72;
+seed_num = 36;
 
 rng(seed_num)
 
@@ -26,7 +26,6 @@ NC   = length(Conc);
 NR   = 20;
 cmd  = 'CSC_DIS';
 
-% p_range      = [0.25,0.75];
 beta_s_range      = [1e-3,0.9];
 beta_d_range      = [1e-3,0.5];
 lam_s_range       = [0,0.1];
@@ -39,9 +38,6 @@ c_range         = [0,10];
 
 
 c      = rand*10;
-% p      = rand;
-% alpha1 = rand*(alpha_range(2)-alpha_range(1)) + alpha_range(1);
-% alpha2 = rand*(alpha_range(2)-alpha_range(1)) + alpha_range(1);
 beta1  = rand*(beta_s_range(2)-beta_s_range(1)) + beta_s_range(1);
 beta2  = rand*(beta_d_range(2)-beta_d_range(1)) + beta_d_range(1);
 alpha1 = beta1 + rand*lam_s_range(2);
@@ -64,58 +60,16 @@ A = [alpha1-beta1,nu12;0,-beta2];
 
 eig(A)
 
-get_stable_p(A)
+% get_stable_p(A)
 
 
 
-%% cap test
-
-% no_cap_cap_hist = [];
-% cap_cap_hist = [];
-% cap_null_hist = [];
-% null_null_hist = [];
-% 
-% for cap = 0:6
-% 
-%     tic
-%     DATA_no_cap = Switching_gen(init,theta,Time,Conc,NR,NC,NT,s,cmd);
-%     t_gen1 = toc
-%     
-%     tic
-%     DATA_cap = Switching_gen(init,theta,Time,Conc,NR,NC,NT,s,cmd,cap);
-%     t_gen2 = toc
-%     
-%     tic
-%     DATA_null = Switching_gen(init,theta_null,Time,Conc,NR,NC,NT,s,cmd);
-%     t_gen3 = toc
-%     
-%     tic
-%     opt_fval_no_cap_cap = get_like(DATA_no_cap,theta,Time,Conc,NR,NC,NT,s,cmd)
-%     no_cap_cap_hist = [no_cap_cap_hist,opt_fval_no_cap_cap];
-%     t_like = toc
-%     
-%     tic
-%     opt_fval_cap_cap = get_like(DATA_cap,theta,Time,Conc,NR,NC,NT,s,cmd)
-%     cap_cap_hist = [cap_cap_hist,opt_fval_cap_cap];
-%     t_like = toc
-%     
-%     tic
-%     opt_fval_cap_null = get_like(DATA_cap,theta_null,Time,Conc,NR,NC,NT,s,cmd)
-%     cap_null_hist = [cap_null_hist,opt_fval_cap_null];
-%     t_like = toc
-%     
-%     tic
-%     opt_fval_null_null = get_like(DATA_null,theta_null,Time,Conc,NR,NC,NT,s,cmd)
-%     null_null_hist = [null_null_hist,opt_fval_null_null];
-%     t_like = toc
-% 
-% end
 
 
 
 
 %% Optimization bound (Hill2_switching_death)
-%  theta = [{alpha,beta,nu,b_beta,E_beta}_s,c]
+
 
 
 alpha_lb = 0;
@@ -226,7 +180,7 @@ end
 
     
 
-save_name = strcat('Result/PE_CSC_DIS_a12_',num2str(seed_num),'.mat');
+save_name = strcat('Result/Test_',num2str(seed_num),'.mat');
 
 save(save_name)
 

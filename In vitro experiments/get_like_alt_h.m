@@ -139,7 +139,5 @@ function ret = get_like_alt_h(DATA,x,Time,Conc,NR,NC,NT,s,cmd)
             Var_ob_i_inv = Var_ob_i^(-1);
             DATA_i = DATA(2:end,i,r);
             ret = ret + 1/2 * (DATA_i - Meani)'*Var_ob_i_inv*(DATA_i - Meani) + 1/2*log(det(2 * pi * Var_ob_i));
-            exp(-1/2 * (DATA_i - Meani)'*Var_ob_i_inv*(DATA_i - Meani)) + 1/2*log(det(2 * pi * Var_ob_i))
-            pause
         end
     end

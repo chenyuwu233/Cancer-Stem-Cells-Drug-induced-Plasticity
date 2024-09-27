@@ -5,7 +5,7 @@ warning('off','MATLAB:integral:NonFiniteValue')
 
 %%
 
-seed_num = 31;
+seed_num = 61;
 
 rng(seed_num)
 
@@ -24,7 +24,6 @@ NC   = length(Conc);
 NR   = 20;
 cmd  = 'CSC_DIS';
 
-% p_range      = [0.25,0.75];
 beta_s_range      = [1e-3,0.9];
 beta_d_range      = [1e-3,0.5];
 lam_s_range       = [0,0.1];
@@ -37,9 +36,6 @@ c_range         = [0,10];
 
 
 c      = rand*10;
-% p      = rand*(p_range(2)-p_range(1)) + p_range(1);
-% alpha1 = rand*(alpha_range(2)-alpha_range(1)) + alpha_range(1);
-% alpha2 = rand*(alpha_range(2)-alpha_range(1)) + alpha_range(1);
 beta1  = rand*(beta_s_range(2)-beta_s_range(1)) + beta_s_range(1);
 beta2  = rand*(beta_d_range(2)-beta_d_range(1)) + beta_d_range(1);
 alpha1 = beta1 + rand*lam_s_range(2);
@@ -80,7 +76,6 @@ t_like = toc
 
 
 %% Optimization bound (Hill2_switching_death)
-%  theta = [{alpha,beta,nu,b_beta,E_beta}_s,c]
 
 
 alpha_lb = 0;
@@ -90,7 +85,7 @@ beta_lb  = 1e-6;
 beta_ub  = 1;
 nu_lb = 0;
 nu_ub = 1-1e-6;
-nu_d_ub = 1-1e-6;
+nu_d_ub = 0;
 b_beta_lb  = 0.5;
 b_beta_ub  = 1;
 b_nu_lb    = 1;
@@ -135,51 +130,7 @@ end
     
 
 
-
-
-% %% Optimization parts (CI)
-% 
-% options1 = optimoptions(@fmincon,'MaxFunctionEvaluations',5990,'MaxIterations',500,'Display','off','algorithm','sqp');
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% B_num = 13;
-% B_sample = 100;
-% B_parameter = [];
-% 
-% 
-% parfor i = 1:B_sample
-% 
-%     Data_i =zeros(NT,NC,B_num);
-%     for j = 1:B_num
-%         ri = randi(NR);
-%         Data_i(:,:,j) =  DATA(:,:,ri);
-%     end
-%     
-%     func = @(x) get_like(Data_i,x,Time,Conc,B_num,NC,NT,s,cmd);
-%     
-%     fval_hist   = [];
-%     params_hist = [];
-%     
-%     for j = 1:num_optim
-%         [xx,ff,~,out,~,g,~]  = fmincon(func,x_init(j,:),A,b,[],[],lb,ub,[],options1); 
-%         fval_hist = [fval_hist,ff];
-% %         fval_hist = [fval_hist,func(xx)];
-%         params_hist = [params_hist;xx];
-%     end
-%     [of,oi] = min(fval_hist);
-%     opt_xx = params_hist(oi,:);
-%     B_parameter = [B_parameter;opt_xx];
-%     fprintf('Loop %d complete\n',i)
-% end
-
-
-%% Optimization (Point estimate death)
+%% Optimization (Point estimate)
 
 options1 = optimoptions(@fmincon,'MaxFunctionEvaluations',5990,'MaxIterations',500,'Display','off','algorithm','sqp');
 func = @(x) get_like(DATA,x,Time,Conc,NR,NC,NT,s,cmd);
@@ -214,7 +165,7 @@ end
 
     
 
-save_name = strcat('Result/PE_CSC_DIS_',num2str(seed_num),'.mat');
+save_name = strcat('Result/Test_',num2str(seed_num),'.mat');
 
 save(save_name)
 

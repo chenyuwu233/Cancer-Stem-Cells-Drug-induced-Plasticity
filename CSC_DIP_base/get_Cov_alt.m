@@ -31,7 +31,7 @@ function ret = get_Cov_alt(init,A,Sig,t1,t2,Time)
         if t1 == t2
             Mi_12 = eye(n);
         else
-            Mi_12 = get_Mean_alt(A,[0,Time(t2) - Time(t1)]);
+            Mi_12 = get_Mean(A,[0,Time(t2) - Time(t1)]);
         end
         for i = 1:n
             ret  = ret + X0(i)*ones(1,n)*Sig(:,:,i,t1)*Mi_12*ones(n,1);

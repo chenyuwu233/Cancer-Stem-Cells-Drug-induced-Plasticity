@@ -7,7 +7,8 @@ parpool('local',20)
 warning('off','MATLAB:integral:NonFiniteValue')
 % addpath('C:\Users\euclid\OneDrive\UMN-My-gear\Phenotypic_Switching_model\Switching_model(MATLAB)\Main functions')
 
-seed_num = 121;
+%%
+seed_num = 52;
 
 rng(seed_num)
 
@@ -39,9 +40,6 @@ c_range         = [0,10];
 
 
 c      = rand*10;
-% p      = rand*(p_range(2)-p_range(1)) + p_range(1);
-% alpha1 = rand*(alpha_range(2)-alpha_range(1)) + alpha_range(1);
-% alpha2 = rand*(alpha_range(2)-alpha_range(1)) + alpha_range(1);
 beta1  = rand*(beta_s_range(2)-beta_s_range(1)) + beta_s_range(1);
 beta2  = rand*(beta_d_range(2)-beta_d_range(1)) + beta_d_range(1);
 alpha1 = beta1 + rand*lam_s_range(2);
@@ -178,7 +176,7 @@ end
 
     
 
-save_name = strcat('Result/PE_CSC_DIS_ip_',num2str(seed_num),'.mat');
+save_name = strcat('Result/Test_',num2str(seed_num),'.mat');
 
 save(save_name)
 

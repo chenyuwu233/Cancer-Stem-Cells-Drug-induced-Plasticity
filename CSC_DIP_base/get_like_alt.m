@@ -1,15 +1,27 @@
 %% Description:
-% This is a generating function for the switching model with manually defined initial proportion.
+%  This is a function to obtain the Covaraince matrix for swithing model
+%  Important assumption: the time interval is identical, theta contains the
+%  initial proportion.
 %
-% Inputs (suppose we have s sub-types)
-%  - init: 1 x s vector that includes initial cell numbers
-%  - theta: 1 x s*(d+1)+1 that includes the initial proportion, birth rate, death rate, and
-%    switching rate among every sub-types, the last element is drug effect.
+%  Required function:
+%  get_path_like.m
+%  get_Cov_mat.m
+%  get_Cov.m
+%  get_sig_j.m
+%  get_m.m
+%  
+%  Input:
+%  - DATA: NT X NC X NR tensor that records all the data
+%  - theta: 1 x s*(s+4)+1 that includes the initial proportion, birth rate, death rate, and
+%           switching rate among every sub-types, the last element is drug effect.
 %                   [{p,alhpa,beta,{nu}_{s-1},b,E,(n)}_s,c]
-%  - Time: 1 x NT vector that includes all the time points we collect the data.
-%  - Conc: 1 x NC vector that includes the concentration points
+%  - Time: 1 x NT vector that records all the time points, Time points does
+%  not need to be equal-distance.
+%  - Conc: 1,2 x NC vector that records all the concentration points
 %  - NR: number of replicates
-%  - s: number of sub-types
+%  - NC: number of concentration points
+%  - NT: number of time points
+%  - s:  number of distinct sub-types
 %  - cmd:   string command about what model we used for drug dependency:
 %      - 'Linear_switching': Assume the switching rate (nu)_i 'Linearly'
 %      depends on the drug concentration with parameters (b)_i
@@ -46,7 +58,7 @@
 %      with parameters (b_nu,E_nu,b_beta,E_beta)_i. 
 %      Note that this model allows two type of drug, one affect the
 %      switching rate (nu)_i and one affect the death rate (beta)_i.
-%
+%      
 %      - 'Hill2_switching_Hill2_switching': Assume the switching rate (nu)_i
 %      'Hilly' depends on the drug concentration
 %      with parameters (b_nu1,E_nu1,b_nu2,E_nu2)_i. 
@@ -60,7 +72,7 @@
 %      Note that this model allows two type of drug, one affect the
 %      death rate with (b_beta1)_i and one affect the death rate with
 %      (b_beta2)_i
-%
+%  
 %      - 'Hill2_switching_Hill2_death_i': Assume the switching rate (nu)_i
 %      and death rate (beta)_i 'Hilly' depends on the drug concentration
 %      with parameters (b_nu,E_nu,b_beta,E_beta)_i. 
@@ -82,67 +94,56 @@
 %      death rate with (b_beta1)_i and one affect the death rate with
 %      (b_beta2)_i. We applied the drug independently.
 %
-%      - 'Multi_All_nu': Assume the death rate and asymmetrical birth rate
-%      'Hilly' depends on the drug concentration but only significantly
-%      affect nu of one subpopulation from one drug.
-%
 %      - 'CSC_DIS': One drug which can increase death rate and switching rate of the DC.
 %        In this experiment we have the following parameters set:
 %        θ=[α_1,β_1,ν_12, α_2=0,β_2,ν_21,b_beta_2,E_beta_2,b_nu_2,E_nu_2,c]
 %
-% Output:
-% ret: NT x NC x NR tensor that records the total number of cells at every
-% time points
+%  Output:
+%  The Likelihood of the DATA
 
 
+function ret = get_like_alt(DATA,x,Time,Conc,NR,NC,NT,s,cmd)
+    theta = x;
+    c = theta(end)';
+%     ti = Time(2) - Time(1);
 
 
-function ret = Switching_gen_ip(init, theta, Time, Conc, NR, NC, NT, s,cmd)
-    c     = theta(end);
     theta(end) = [];
     Theta = reshape(theta,[],s)';
-    p     = Theta(:,1)';
-    Theta(:,1) = [];
-
-
-    init = round(init*p);
-    %% Generating the data
-    switch cmd
-        case {'Linear_switching','Single_Broad','Single_Broad_d','Hill2_switching_death','CSC_DIS'}
-            ret = zeros(NT,NC,NR);
-            fprintf('Start 1 drug data generation\n')
-            for i = 1:NC
-                parfor j = 1:NR
-                    Theta_i = Drug_theta(Theta,Conc(i),cmd);
-                    path_i  = Switching_path(init,Theta_i,Time);
-                    ret(:,i,j) = max(0,sum(path_i,1)+[0,round(normrnd(0,c,1,NT-1))]);
-                end
-            end
-        case {'Hill2_switching_Hill2_death_i','Hill2_death_Hill2_death_i',...
-                'Multi_Broad','Multi_Selective','Multi_Selective_d','Multi_All_nu'}
-            ret = zeros(NT,NC,NR);
-            fprintf('Start 2 drug(independent) data generation\n')
-            for i = 1:NC
-                parfor j = 1:NR
-                    Theta_i = Drug_theta(Theta,Conc(i,:),cmd);
-                    path_i  = Switching_path(init,Theta_i,Time);
-                    ret(:,i,j) = max(0,sum(path_i,1)+[0,round(normrnd(0,c,1,NT-1))]);
-                end
-            end
-        case {'Hill2_switching_Hill2_death','Hill2_switching_2','Hill2_death_2',...
-                'Hill2_death_Hill2_death','Hill2_switching_Hill2_switching'}
-            ret = zeros(NT,NC(1),NC(2),NR);
-            fprintf('Start 2 drug(cross) data generation\n')
-            for i = 1:NC(1)
-                for j = 1:NC(2)
-                    parfor k = 1:NR
-                        Theta_ij = Drug_theta(Theta,[Conc(1,i),Conc(2,j)],cmd);
-                        path_ij  = Switching_path(init,Theta_ij,Time);
-                        ret(:,i,j,k) = max(0,sum(path_ij,1)+[0,round(normrnd(0,c,1,NT-1))]);
-                    end
-                end
-            end
-    end
-
+    A    = Drug_A(Theta,0,cmd);
+    p    = get_stable_p(A);
+    b    = Theta(:,1)';
     
-end
+    %% Obtain the likelihood
+    ret = 0;
+    for i = 1:NC
+        Ai      = Drug_A(Theta,Conc(i),cmd);
+        % Mean
+        init = mean(DATA(1,i,:),'omitnan')*p;
+        Mi      = get_Mean_alt(Ai,Time); % s x s x NT tensor
+        MM      = [];
+        for r = 1:NR
+            
+            Meani   = zeros(1,NT-1);
+            for j = 1:NT-1
+                Meani(j) = sum(init*Mi(:,:,j));
+            end
+            MM = [MM;Meani];
+        end
+        % Covariance 
+        Sig_i   = zeros(s,s,s,NT);
+        for j = 1:s
+            for t = 1:NT
+                temp = get_sig_j(Ai,b,Time(t),j);
+                Sig_i(:,:,j,t) = temp;
+            end
+        end
+        Vari   = get_Cov_mat_alt(init,Ai,Sig_i,Time);
+        Vari   = Vari(2:end,2:end);
+        Var_ob_i = Vari + c^2*eye(NT-1);
+        Var_ob_i_inv = Var_ob_i^(-1);
+        DATA_i = squeeze(DATA(2:end,i,:));
+%                 MM     = repmat(Meani,NR,1);
+        ret = ret + 1/2 * trace((DATA_i' - MM)*Var_ob_i_inv*(DATA_i' - MM)');
+        ret = ret + NR/2*log(det(2 * pi * Var_ob_i));
+    end

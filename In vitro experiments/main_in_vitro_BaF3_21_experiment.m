@@ -346,7 +346,7 @@ DIP_Asy_AIC = 2*num_param_DIP_Asy + 2*of_DIP_Asy;
 
 
 
-save_name = strcat('Result/In_vitro_AIC_BaF3_21_YY_ip.mat');
+save_name = strcat('Result/In_vitro_AIC_BaF3_21_TEST.mat');
 
 save(save_name)
 

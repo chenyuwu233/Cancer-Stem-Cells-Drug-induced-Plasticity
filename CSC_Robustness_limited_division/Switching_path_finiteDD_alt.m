@@ -38,8 +38,6 @@ function ret = Switching_path_finiteDD_alt(init,theta,Time,max_cap,cmd)
         sc_rate   = SC_rate*SC;
         dc_rate   = DC_b*sum(DC_indi>0 & DC_indi<=DC_cap,'all')+(DC_d+DC_s)*sum(DC_indi>0,"all");
         rate      = sc_rate+dc_rate;
-        DC_indi
-        rate
         t    = t - (1/rate) * log(rand);
         id = id + 1;
         if t > Time(nt)
@@ -64,20 +62,6 @@ function ret = Switching_path_finiteDD_alt(init,theta,Time,max_cap,cmd)
 
         event  = rand;
         if event < sc_rate/rate % Stem Cell event
-%             if event < SC_b*SC/rate % Stem Cell birth
-%                 SC = SC+1;
-%             elseif SC_b*SC/rate <= event && event < (SC_b+SC_d)*SC/rate % Stem Cell death
-%                 SC = SC-1;
-%             elseif (SC_b+SC_d)*SC/rate <= event && event < sc_rate/rate % Stem Cell differentiate
-%                 DC = [DC,1];
-%                 new_cell = zeros(2^DC_cap,1);
-%                 new_cell(1) = 1;
-%                 DC_indi = [DC_indi,new_cell];
-%             else
-%                 event
-%                 sc_rate/rate
-%                 pause
-%             end
             sc_event = rand;
             if sc_event < SC_b/SC_rate % Stem Cell birth
                 SC = SC+1;
@@ -90,54 +74,6 @@ function ret = Switching_path_finiteDD_alt(init,theta,Time,max_cap,cmd)
                 DC_indi = [DC_indi,new_cell];
             end
         else % Differentiated Cell event
-%             event = event - sc_rate/rate;
-%             dc_birth  = [0,DC_b*sum(DC_indi>0 & DC_indi<=DC_cap,'all')/rate];
-%             dc_death  = [DC_b*sum(DC_indi>0 & DC_indi<=DC_cap,'all')/rate,(1-DC_s*sum(DC_indi>0,'all'))/rate];
-%             dc_switch = [(1-DC_s*sum(DC_indi>0,'all'))/rate,dc_rate/rate];
-%             if event >= dc_switch(1) && event <dc_switch(2) % Assume: every cell can de-differentiate, de-differentiation does not affect the differentiated cell.
-%                     SC = SC+1;
-%                     if strcmp(cmd,'switching')
-%                     % Assume switching
-%                         if size(DC_indi,1) == 1
-%                             lineage_indi = get_rand_index(DC_indi);
-%                             cell_indi = 1;
-%                         else
-%                             lineage_indi = get_rand_index(sum(DC_indi>0));
-%                             cell_indi = get_rand_index(DC_indi(:,lineage_indi)>0); % Cell indi should be less than the first zero in DC_indi
-%                         end
-%                         DC_indi(cell_indi,lineage_indi) = -1;
-%                     end
-%             elseif event >= dc_death(1) && event < dc_death(2) % Assume: every cell can die
-%                 if size(DC_indi,1) == 1
-%                     lineage_indi = get_rand_index(DC_indi);
-%                     cell_indi = 1;
-%                 else
-%                     lineage_indi = get_rand_index(sum(DC_indi>0));
-%                     cell_indi = get_rand_index(DC_indi(:,lineage_indi)>0); % Cell indi should be less than the first zero in DC_indi
-%                 end
-%                 DC_indi(cell_indi,lineage_indi) = -1;
-%             elseif event >= dc_birth(1) && event < dc_birth(2) % Assume each lineage can only get DC_cap birth
-%                 
-%                 if size(DC_indi,1) == 1
-%                     cell_indi = 1;
-%                     lineage_indi = get_rand_index(DC_indi);
-%                     DC(lineage_indi) = DC(lineage_indi)+1;
-%                 else
-%                     lineage_indi = get_rand_index(sum(DC_indi>0&DC_indi<=DC_cap));
-%                     DC(lineage_indi) = DC(lineage_indi)+1;
-%                     cell_indi = get_rand_index(DC_indi(:,lineage_indi)>0&DC_indi(:,lineage_indi)<=DC_cap);
-%                     if DC_indi(DC(lineage_indi),lineage_indi) ~=0
-%                         DC_indi(:,lineage_indi)
-%                         pause
-%                     end
-%                 end
-%                 DC_indi(cell_indi,lineage_indi) = DC_indi(cell_indi,lineage_indi)+1;
-%                 DC_indi(DC(lineage_indi),lineage_indi) = DC_indi(cell_indi,lineage_indi); % Duplicate the cell and information.
-%             else
-%                 event
-%                 dc_rate/rate
-%                 pause
-%             end
 
             dc_event = rand;
             dc_birth  = [0,DC_b*sum(DC_indi>0 & DC_indi<=DC_cap,'all')/dc_rate];
@@ -196,8 +132,4 @@ function ret = Switching_path_finiteDD_alt(init,theta,Time,max_cap,cmd)
             end
         end
     end
-    id
-%     length(DC)
-    % DC_indi
-%     DC(DC_indi == DC_cap)  % Check whether we reach the DC_cap
 end

@@ -7,7 +7,7 @@ parpool('local',20)
 warning('off','MATLAB:integral:NonFiniteValue')
 % addpath('C:\Users\euclid\OneDrive\UMN-My-gear\Phenotypic_Switching_model\Switching_model(MATLAB)\Main functions')
 
-seed_num = 121;
+seed_num = 93;
 
 rng(seed_num)
 
@@ -177,7 +177,7 @@ end
 
     
 
-save_name = strcat('Result/PE_CSC_DIS_a3_',num2str(seed_num),'.mat');
+save_name = strcat('Result/Test_',num2str(seed_num),'.mat');
 
 save(save_name)
 

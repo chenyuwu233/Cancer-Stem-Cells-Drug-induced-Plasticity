@@ -47,7 +47,9 @@ DATA = round(DATA);
 
 
 
-%% Optimization bound (DIP)
+
+
+%% Optimization bound (DIP) TD2
 
 
 
@@ -67,24 +69,28 @@ E_lb  = 1e-6;
 E_ub  = 16;
 m_lb  = 0.1;
 m_ub  = 5;
+tv1_lb = 0;
+tv1_ub = 1;
+tv_lb = 0;
+tv_ub = 36;
 c_lb  = 0;
 c_ub  = 300;
 
 lb = [0,alpha_lb,beta_lb,nu_lb,1,1,1,1,1,1,...
-        0,alpha_lb,beta_lb,0,b_beta_lb,E_lb,m_lb,b_nu_lb,E_lb,m_lb,c_lb];
+        0,alpha_lb,beta_lb,0,b_beta_lb,E_lb,m_lb,b_nu_lb,E_lb,m_lb,tv1_lb,tv_lb,c_lb];
 
 
 
 ub = [1,alpha_ub,beta_ub,nu_ub,1,1,1,1,1,1,...
-        1,alpha_ub,beta_ub,nu_d_ub,b_beta_ub,E_ub,m_ub,b_nu_ub,E_ub,m_ub,c_ub];
+        1,alpha_ub,beta_ub,nu_d_ub,b_beta_ub,E_ub,m_ub,b_nu_ub,E_ub,m_ub,tv1_ub,tv_ub,c_ub];
 
 
-A = [0,1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0;
-     0,-1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+A = [0,1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0;
+     0,-1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 b = [0.1;0];
 
-Aeq = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0;
-       0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0];
+Aeq = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0;
+       0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0];
 beq = [0,1];
 
 num_optim= 20;
@@ -107,22 +113,25 @@ end
 %% Optimization (Point estimate death)
 
 options1 = optimoptions(@fmincon,'MaxFunctionEvaluations',5990,'MaxIterations',500,'Display','off','algorithm','sqp');
-func = @(x) get_like_alt_h(DATA,x,Time,Conc,NR,NC,NT,s,cmd);
-fval_hist_pe_DIP   = [];
-params_hist_pe_DIP = [];
+func = @(x) get_like_TD_h(DATA,x,Time,Conc,NR,NC,NT,s,cmd);
+fval_hist_pe_TD2   = [];
+params_hist_pe_TD2 = [];
 tic
 parfor j = 1:num_optim
     [xx,ff,~,out,~,g,~]  = fmincon(func,x_init(j,:),A,b,Aeq,beq,lb,ub,[],options1); 
-    fval_hist_pe_DIP = [fval_hist_pe_DIP,ff];
-    params_hist_pe_DIP = [params_hist_pe_DIP;xx];
+    fval_hist_pe_TD2 = [fval_hist_pe_TD2,ff];
+    params_hist_pe_TD2 = [params_hist_pe_TD2;xx];
 end
-t_DIP = toc
-[of_DIP,oi] = min(fval_hist_pe_DIP);
-opt_xx_pe_DIP = params_hist_pe_DIP(oi,:);
+t_TD2 = toc
+[of_TD2,oi] = min(fval_hist_pe_TD2);
+opt_xx_pe_TD2 = params_hist_pe_TD2(oi,:);
 
 
 
-%% Optimization bound (no DIP)
+
+
+%% Logistic time delay with 2 parameters 
+
 
 
 
@@ -146,24 +155,28 @@ E_lb  = 1e-6;
 E_ub  = 16;
 m_lb  = 0.1;
 m_ub  = 5;
+tv1_lb = 0;
+tv1_ub = 1;
+tv_lb = 0;
+tv_ub = 36;
 c_lb  = 0;
 c_ub  = 300;
 
 lb = [0,1,1,1,1,1,1,1,1,1,...
-        0,alpha_lb,beta_lb,0,b_beta_lb,E_lb,m_lb,1,1,1,c_lb];
+        0,alpha_lb,beta_lb,0,b_beta_lb,E_lb,m_lb,1,1,1,tv1_lb,tv_lb,c_lb];
 
 
 
 ub = [1,1,1,1,1,1,1,1,1,1,...
-        1,alpha_ub,beta_ub,nu_d_ub,b_beta_ub,E_ub,m_ub,1,1,1,c_ub];
+        1,alpha_ub,beta_ub,nu_d_ub,b_beta_ub,E_ub,m_ub,1,1,1,tv1_ub,tv_ub,c_ub];
 
 
-A = [0,1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0;
-     0,-1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+A = [0,1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0;
+     0,-1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 b = [0.1;0];
 
-Aeq = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0;
-       0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0];
+Aeq = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0;
+       0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0];
 beq = [0,1];
 
 num_optim= 20;
@@ -188,45 +201,42 @@ end
 %% Optimization (Point estimate death)
 
 options1 = optimoptions(@fmincon,'MaxFunctionEvaluations',5990,'MaxIterations',500,'Display','off','algorithm','sqp');
-func = @(x) get_like_alt_h(DATA,x,Time,Conc,NR,NC,NT,s,cmd);
-fval_hist_pe_nDIP   = [];
-params_hist_pe_nDIP = [];
+func = @(x) get_like_TD_h(DATA,x,Time,Conc,NR,NC,NT,s,cmd);
+fval_hist_pe_nTD2   = [];
+params_hist_pe_nTD2 = [];
 tic
 parfor j = 1:num_optim
     [xx,ff,~,out,~,g,~]  = fmincon(func,x_init(j,:),A,b,Aeq,beq,lb,ub,[],options1); 
-    fval_hist_pe_nDIP = [fval_hist_pe_nDIP,ff];
-    params_hist_pe_nDIP = [params_hist_pe_nDIP;xx];
+    fval_hist_pe_nTD2 = [fval_hist_pe_nTD2,ff];
+    params_hist_pe_nTD2 = [params_hist_pe_nTD2;xx];
 end
-t_nDIP = toc
-[of_nDIP,oi] = min(fval_hist_pe_nDIP);
-opt_xx_pe_nDIP = params_hist_pe_nDIP(oi,:);
-
-
-
-
+t_nTD2 = toc
+[of_nTD2,oi] = min(fval_hist_pe_nTD2);
+opt_xx_pe_nTD2 = params_hist_pe_nTD2(oi,:);
 
 
 %% Compute the AIC
 
-DIP_num_par = 12;
-nDIP_num_par = 6;
 
 
-nDIP_AIC = 2*nDIP_num_par + 2*of_nDIP;
-DIP_AIC = 2*DIP_num_par + 2*of_DIP;
+nDIP_TD2_num_par = 8;
+DIP_TD2_num_par = 14;
+
+
+nDIP_TD2_AIC = 2*nDIP_TD2_num_par + 2*of_nTD2;
+DIP_TD2_AIC = 2*DIP_TD2_num_par + 2*of_TD2;
 
 
 
-DIP_AICc = DIP_AIC + (2*DIP_num_par^2 + 2*DIP_num_par)/(3*9*2 - DIP_num_par - 1);
-nDIP_AICc = nDIP_AIC + (2*nDIP_num_par^2 + 2*nDIP_num_par)/(3*9*2 - nDIP_num_par - 1);
-
+nDIP_TD2_AICc = nDIP_TD2_AIC + (2*nDIP_TD2_num_par^2 + 2*nDIP_TD2_num_par)/(3*9*2 - nDIP_TD2_num_par - 1);
+DIP_TD2_AICc = DIP_TD2_AIC + (2*DIP_TD2_num_par^2 + 2*DIP_TD2_num_par)/(3*9*2 - DIP_TD2_num_par - 1);
 
 
 
 
     
 
-save_name = strcat('Result/In_vitro_Gastric_CNSC_CSC.mat');
+save_name = strcat('Result/In_vitro_Gastric_CNSC_CSC_TD.mat');
 
 save(save_name)
 

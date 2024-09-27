@@ -12,9 +12,7 @@ est = [opt_xx_pe(1:3),...
 org = [theta(1:3),...
         theta(8:9),1-theta(11),theta(12),theta(13)-1,theta(14)];
 relative_error = abs(est-org)./org;
-% e_hist = [e_hist;est-org];
-% mean(relative_error);
-% ME = [ME,mean(relative_error)];
+
 
 Theta =  reshape(theta(1:end-1),[],s)';
 Theta_est  = reshape(opt_xx_pe(1:end-1),[],s)';
@@ -57,9 +55,7 @@ est = [opt_xx_pe(1:3),...
 org = [theta(1:3),...
         theta(8:9),1-theta(11),theta(12),theta(13)-1,theta(14)];
 relative_error = abs(est-org)./org;
-% e_hist = [e_hist;est-org];
-% mean(relative_error);
-% ME = [ME,mean(relative_error)];
+
 
 Theta =  reshape(theta(1:end-1),[],s)';
 Theta_est  = reshape(opt_xx_pe(1:end-1),[],s)';
