@@ -136,12 +136,14 @@ options1 = optimoptions(@fmincon,'MaxFunctionEvaluations',5990,'MaxIterations',5
 func = @(x) get_like(DATA,x,Time,Conc,NR,NC,NT,s,cmd);
 fval_hist_pe   = [];
 params_hist_pe = [];
+H_history = cell(1,num_optim);
 tic
 parfor j = 1:num_optim
     try
-    [xx,ff,~,out,~,g,~]  = fmincon(func,x_init(j,:),A,b,[],[],lb,ub,[],options1); 
+    [xx,ff,~,out,~,g,H]  = fmincon(func,x_init(j,:),A,b,[],[],lb,ub,[],options1); 
     fval_hist_pe = [fval_hist_pe,ff];
     params_hist_pe = [params_hist_pe;xx];
+    H_history{j} = H;
     catch
     end
     j
@@ -149,6 +151,7 @@ end
 t = toc
 [of,oi] = min(fval_hist_pe);
 opt_xx_pe = params_hist_pe(oi,:);
+opt_Hessian = H_history{oi};
 
 
 %% Fmincon check point

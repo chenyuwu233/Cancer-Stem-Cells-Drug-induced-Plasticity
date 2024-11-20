@@ -113,7 +113,7 @@ end
 %% Optimization (Point estimate death)
 
 options1 = optimoptions(@fmincon,'MaxFunctionEvaluations',5990,'MaxIterations',500,'Display','off','algorithm','sqp');
-func = @(x) get_like_TD_h(DATA,x,Time,Conc,NR,NC,NT,s,cmd);
+func = @(x) get_like_TD_meanflow_h(DATA,x,Time,Conc,NR,NC,NT,s,cmd);
 fval_hist_pe_TD2   = [];
 params_hist_pe_TD2 = [];
 tic
@@ -201,7 +201,7 @@ end
 %% Optimization (Point estimate death)
 
 options1 = optimoptions(@fmincon,'MaxFunctionEvaluations',5990,'MaxIterations',500,'Display','off','algorithm','sqp');
-func = @(x) get_like_TD_h(DATA,x,Time,Conc,NR,NC,NT,s,cmd);
+func = @(x) get_like_TD_meanflow_h(DATA,x,Time,Conc,NR,NC,NT,s,cmd);
 fval_hist_pe_nTD2   = [];
 params_hist_pe_nTD2 = [];
 tic
