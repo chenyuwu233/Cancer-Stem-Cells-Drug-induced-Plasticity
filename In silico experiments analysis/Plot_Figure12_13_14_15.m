@@ -1,9 +1,9 @@
 %% Hierarchy 
 load('Results\hierarchy.mat')
 hold on
-target = cap_1_e_hist; % Plot Figure 11, 12, 13, 14 by setting this value as cap_0_e_hist, cap_1_e_hist, cap_2_e_hist, cap_3_e_hist respectively.
-name = ["\boldmath$\alpha_s$","\boldmath$\beta_s$","\boldmath$\nu_{sd}$","\boldmath$\alpha_{d}$",...
-"\boldmath$\beta_{d}$","\boldmath$1-b_{d,\beta}$","\boldmath$E_{d,\beta}$","\boldmath$b_{d,\nu}-1$","\boldmath$E_{d,\nu}$"];
+target = cap_3_e_hist; % Plot Figure 12, 13, 14, 15 by setting this value as cap_0_e_hist, cap_1_e_hist, cap_2_e_hist, cap_3_e_hist respectively.
+name = ["\boldmath$\alpha_r$","\boldmath$\beta_r$","\boldmath$\nu_{rs}$","\boldmath$\alpha_{s}$",...
+"\boldmath$\beta_{s}$","\boldmath$1-b_{s,\beta}$","\boldmath$E_{s,\beta}$","\boldmath$b_{s,\nu}-1$","\boldmath$E_{s,\nu}$"];
 sc = boxplot(target,name);
 set(sc,'LineWidth',3)
 xline([1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5])
