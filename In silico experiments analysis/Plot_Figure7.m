@@ -2,8 +2,8 @@
 
 load('Results\Assumption3_100.mat')
 hold on
-name = ["\boldmath$\alpha_s$","\boldmath$\beta_s$","\boldmath$\nu_{sd}$","\boldmath$b_{s,\beta}$","\boldmath$E_{s,\beta}$","\boldmath$b_{s,\nu}$","\boldmath$E_{s,\nu}$",...
-"\boldmath$\alpha_d$","\boldmath$\beta_{d}$","\boldmath$b_{d,\beta}$","\boldmath$E_{d,\beta}$","\boldmath$b_{d,\nu}$","\boldmath$E_{d,\nu}$"];
+name = ["\boldmath$\alpha_r$","\boldmath$\beta_r$","\boldmath$\nu_{rs}$","\boldmath$b_{r,\beta}$","\boldmath$E_{r,\beta}$","\boldmath$b_{r,\nu}$","\boldmath$E_{r,\nu}$",...
+"\boldmath$\alpha_s$","\boldmath$\beta_{s}$","\boldmath$b_{s,\beta}$","\boldmath$E_{s,\beta}$","\boldmath$b_{s,\nu}$","\boldmath$E_{s,\nu}$"];
 
 % relative_error_a3(:,8) = []; %% temp
 

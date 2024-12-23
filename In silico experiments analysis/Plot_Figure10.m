@@ -15,7 +15,7 @@ y  = mean(birth_hist);
 % ax.YScale = 'log';
 ax.YLim = [0,3];
 ax.XLim = [0,5];
-ylabel('\boldmath$\hat{\alpha_d}/\alpha_d^*$','Interpreter','latex')
+ylabel('\boldmath$\hat{\alpha_s}/\alpha_s^*$','Interpreter','latex')
 xlabel('Maximum division number')
 
 % set(ax,"DefaultAxesTickLabelInterpreter",'latex')
