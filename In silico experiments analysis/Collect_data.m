@@ -1,11 +1,12 @@
 %% Recording PE (base)
 
-theta_hist = [];
-pe_hist    = [];
-relative_error = [];
-log_ratio_error = [];
-dc_lam_error = [];
+theta_hist          = [];
+pe_hist             = [];
+relative_error      = [];
+log_ratio_error     = [];
+lam_error           = [];
 relative_difference = [];
+GR_hist             = [];
 
 for i = 31:130
     if i <= 60
@@ -16,20 +17,127 @@ for i = 31:130
     load(name)
     theta_hist = [theta_hist;theta];
     pe_hist    = [pe_hist;opt_xx_pe];
+    lam_t      = [theta(1)-theta(2),theta(8)-theta(9)];
+    lam_e      = [opt_xx_pe(1)-opt_xx_pe(2),opt_xx_pe(8)-opt_xx_pe(9)];
+    GR_t       = [GR50(theta(11),theta(12),max(Conc)),GR50(theta(13),theta(14),max(Conc))];
+    GR_e       = [GR50(opt_xx_pe(11),opt_xx_pe(12),max(Conc)),GR50(opt_xx_pe(13),opt_xx_pe(14),max(Conc))];
     est = [opt_xx_pe(1:3),...
             opt_xx_pe(8:9),1-opt_xx_pe(11),opt_xx_pe(12),opt_xx_pe(13)-1,opt_xx_pe(14)];
     org = [theta(1:3),...
             theta(8:9),1-theta(11),theta(12),theta(13)-1,theta(14)];
-    relative_error = [relative_error;abs(est-org)./org];
-    log_ratio_error = [log_ratio_error;est./org];
-    dc_lam_error = [dc_lam_error;abs(opt_xx_pe(8)-opt_xx_pe(9))];
+    relative_error      = [relative_error;abs(est-org)./org];
+    log_ratio_error     = [log_ratio_error;est./org];
+    lam_error           = [lam_error;abs((lam_e-lam_t)./lam_t)];
     relative_difference = [relative_difference;(est-org)./org];
+    GR_hist             = [GR_hist;abs((GR_e-GR_t)./GR_t)];
 end
 
 
 
 
 
+%% Recording LLN PE (base)
+
+theta_hist = [];
+pe_hist    = [];
+relative_error = [];
+log_ratio_error = [];
+lam_error = [];
+relative_difference = [];
+GR_hist             = [];
+
+for i = 31:130
+
+    name = strcat('Results\In silico Base LLM\PE_CSC_DIS_',num2str(i),'.mat');
+    load(name)
+    theta_hist = [theta_hist;theta];
+    pe_hist    = [pe_hist;opt_xx_pe];
+    lam_t      = [theta(1)-theta(2),theta(8)-theta(9)];
+    lam_e      = [opt_xx_pe(1)-opt_xx_pe(2),opt_xx_pe(8)-opt_xx_pe(9)];
+    GR_t       = [GR50(theta(11),theta(12),max(Conc)),GR50(theta(13),theta(14),max(Conc))];
+    GR_e       = [GR50(opt_xx_pe(11),opt_xx_pe(12),max(Conc)),GR50(opt_xx_pe(13),opt_xx_pe(14),max(Conc))];
+    est = [opt_xx_pe(1:3),...
+            opt_xx_pe(8:9),1-opt_xx_pe(11),opt_xx_pe(12),opt_xx_pe(13)-1,opt_xx_pe(14)];
+    org = [theta(1:3),...
+            theta(8:9),1-theta(11),theta(12),theta(13)-1,theta(14)];
+    relative_error      = [relative_error;abs(est-org)./org];
+    log_ratio_error     = [log_ratio_error;est./org];
+    lam_error           = [lam_error;abs((lam_e-lam_t)./lam_t)];
+    relative_difference = [relative_difference;(est-org)./org];
+    GR_hist             = [GR_hist;abs((GR_e-GR_t)./GR_t)];
+end
+
+
+
+
+%% Recording PE (base GS)
+
+theta_hist          = [];
+pe_hist             = [];
+relative_error      = [];
+log_ratio_error     = [];
+lam_error           = [];
+relative_difference = [];
+GR_hist             = [];
+
+for i = 31:130
+    % if i <= 40
+    %     name = strcat('Results\In silico Base GS\CIPE_CSC_DIS_',num2str(i),'.mat');
+    % else
+        name = strcat('Results\In silico Base GS\PE_CSC_DIS_',num2str(i),'.mat');
+    % end
+    load(name)
+    theta_hist = [theta_hist;theta];
+    pe_hist    = [pe_hist;opt_xx_pe];
+    lam_t      = [theta(1)-theta(2),theta(8)-theta(9)];
+    lam_e      = [opt_xx_pe(1)-opt_xx_pe(2),opt_xx_pe(8)-opt_xx_pe(9)];
+    GR_t       = [GR50(theta(11),theta(12),max(Conc)),GR50(theta(13),theta(14),max(Conc))];
+    GR_e       = [GR50(opt_xx_pe(11),opt_xx_pe(12),max(Conc)),GR50(opt_xx_pe(13),opt_xx_pe(14),max(Conc))];
+    est = [opt_xx_pe(1:3),...
+            opt_xx_pe(8:9),1-opt_xx_pe(11),opt_xx_pe(12),opt_xx_pe(13)-1,opt_xx_pe(14)];
+    org = [theta(1:3),...
+            theta(8:9),1-theta(11),theta(12),theta(13)-1,theta(14)];
+    relative_error      = [relative_error;abs(est-org)./org];
+    log_ratio_error     = [log_ratio_error;est./org];
+    lam_error           = [lam_error;abs((lam_e-lam_t)./lam_t)];
+    relative_difference = [relative_difference;(est-org)./org];
+    GR_hist             = [GR_hist;abs((GR_e-GR_t)./GR_t)];
+end
+
+
+
+
+
+%% Recording LLN PE (base GS)
+
+theta_hist = [];
+pe_hist    = [];
+relative_error = [];
+log_ratio_error = [];
+lam_error = [];
+relative_difference = [];
+GR_hist             = [];
+
+for i = 31:130
+
+    name = strcat('Results\In silico Base GS LLM\PE_CSC_DIS_',num2str(i),'.mat');
+    load(name)
+    theta_hist = [theta_hist;theta];
+    pe_hist    = [pe_hist;opt_xx_pe];
+    lam_t      = [theta(1)-theta(2),theta(8)-theta(9)];
+    lam_e      = [opt_xx_pe(1)-opt_xx_pe(2),opt_xx_pe(8)-opt_xx_pe(9)];
+    GR_t       = [GR50(theta(11),theta(12),max(Conc)),GR50(theta(13),theta(14),max(Conc))];
+    GR_e       = [GR50(opt_xx_pe(11),opt_xx_pe(12),max(Conc)),GR50(opt_xx_pe(13),opt_xx_pe(14),max(Conc))];
+    est = [opt_xx_pe(1:3),...
+            opt_xx_pe(8:9),1-opt_xx_pe(11),opt_xx_pe(12),opt_xx_pe(13)-1,opt_xx_pe(14)];
+    org = [theta(1:3),...
+            theta(8:9),1-theta(11),theta(12),theta(13)-1,theta(14)];
+    relative_error      = [relative_error;abs(est-org)./org];
+    log_ratio_error     = [log_ratio_error;est./org];
+    lam_error           = [lam_error;abs((lam_e-lam_t)./lam_t)];
+    relative_difference = [relative_difference;(est-org)./org];
+    GR_hist             = [GR_hist;abs((GR_e-GR_t)./GR_t)];
+end
 
 %% Recording PE relaxed drug effects
 

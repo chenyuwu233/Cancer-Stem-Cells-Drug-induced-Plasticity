@@ -114,7 +114,7 @@ function ret = Switching_gen(init, theta, Time, Conc, NR, NC, NT, s,cmd)
             ret = zeros(NT,NC,NR);
             fprintf('Start 1 drug data generation\n')
             for i = 1:NC
-                parfor j = 1:NR
+                for j = 1:NR
                     Theta_i = Drug_theta(Theta,Conc(i),cmd);
                     path_i  = Switching_path(init,Theta_i,Time);
                     ret(:,i,j) = max(0,sum(path_i,1)+[0,round(normrnd(0,c,1,NT-1))]);
@@ -125,7 +125,7 @@ function ret = Switching_gen(init, theta, Time, Conc, NR, NC, NT, s,cmd)
             ret = zeros(NT,NC,NR);
             fprintf('Start 2 drug(independent) data generation\n')
             for i = 1:NC
-                parfor j = 1:NR
+                for j = 1:NR
                     Theta_i = Drug_theta(Theta,Conc(i,:),cmd);
                     path_i  = Switching_path(init,Theta_i,Time);
                     ret(:,i,j) = max(0,sum(path_i,1)+[0,round(normrnd(0,c,1,NT-1))]);
@@ -137,7 +137,7 @@ function ret = Switching_gen(init, theta, Time, Conc, NR, NC, NT, s,cmd)
             fprintf('Start 2 drug(cross) data generation\n')
             for i = 1:NC(1)
                 for j = 1:NC(2)
-                    parfor k = 1:NR
+                    for k = 1:NR
                         Theta_ij = Drug_theta(Theta,[Conc(1,i),Conc(2,j)],cmd);
                         path_ij  = Switching_path(init,Theta_ij,Time);
                         ret(:,i,j,k) = max(0,sum(path_ij,1)+[0,round(normrnd(0,c,1,NT-1))]);

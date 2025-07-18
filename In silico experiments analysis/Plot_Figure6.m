@@ -1,85 +1,260 @@
-    
-idx = 92;
-if idx <= 60
-    name = strcat('Results\In silico Base\Boot_CI_CSC_DIS_alt_',num2str(idx),'.mat');
-else
-    name = strcat('Results\In silico Base\PE_CSC_DIS_',num2str(idx),'.mat');
-end
-load(name)
-
-est = [opt_xx_pe(1:3),...
-        opt_xx_pe(8:9),1-opt_xx_pe(11),opt_xx_pe(12),opt_xx_pe(13)-1,opt_xx_pe(14)];
-org = [theta(1:3),...
-        theta(8:9),1-theta(11),theta(12),theta(13)-1,theta(14)];
-relative_error = abs(est-org)./org;
-
-
-Theta =  reshape(theta(1:end-1),[],s)';
-Theta_est  = reshape(opt_xx_pe(1:end-1),[],s)';
-
-%% Time based plot
-t = tiledlayout(1,2);
-
-ax1 = nexttile;
-
-
-hold on
-fig = gcf;
-Conc_cell = {'0 \mu m','0.0313 \mu m','0.0625 \mu m','0.125 \mu m','0.25 \mu m','0.375 \mu m','0.5 \mu m','1.25 \mu m','2.5 \mu m','3.75 \mu m','5 \mu m'};
-for d = 1:length(Conc)
-    DATA_d = squeeze(DATA(:,d,:))';
-    DATA_median = median(DATA_d);
-    DATA_std    = std(DATA_d)/3;
-    errorbar(Time,DATA_median,DATA_std,'LineWidth',3)
-end
-legend(Conc_cell,'Location','northwest')
-
-ax1.FontSize = 20;
-ax1.FontWeight = 'bold';
-xlabel('Time')
-ylabel('Total cell count')
-ntt = strcat('Average RE:', num2str(mean(relative_error)));
-title(ntt)
-
 %%
-idx = 129;
-if idx <= 60
-    name = strcat('Results\In silico Base\Boot_CI_CSC_DIS_alt_',num2str(idx),'.mat');
-else
-    name = strcat('Results\In silico Base\PE_CSC_DIS_',num2str(idx),'.mat');
-end
-load(name)
+load('Results\Base_GS_100.mat')
 
-est = [opt_xx_pe(1:3),...
-        opt_xx_pe(8:9),1-opt_xx_pe(11),opt_xx_pe(12),opt_xx_pe(13)-1,opt_xx_pe(14)];
-org = [theta(1:3),...
-        theta(8:9),1-theta(11),theta(12),theta(13)-1,theta(14)];
-relative_error = abs(est-org)./org;
-
-
-Theta =  reshape(theta(1:end-1),[],s)';
-Theta_est  = reshape(opt_xx_pe(1:end-1),[],s)';
-
-%% Time based plot
+alpha_r_vec = [relative_error(:,1)];
+lam_r_vec   = [lam_error(:,1)];
+nu_rs_vec   = [relative_error(:,3)];
+alpha_s_vec = [relative_error(:,4)];
+lam_s_vec   = [lam_error(:,2)];
+GR_beta_vec = [GR_hist(:,1)];
+b_beta_vec  = [relative_error(:,6)];
+E_beta_vec  = [relative_error(:,7)];
+GR_nu_vec   = [GR_hist(:,2)];
+b_nu_vec    = [relative_error(:,8)];
+E_nu_vec    = [relative_error(:,9)];
 
 
-ax2 = nexttile;
+%% 
+load('Results\Base_GS_100_LLN.mat')
+
+alpha_r_vec = [alpha_r_vec,relative_error(:,1)];
+lam_r_vec   = [lam_r_vec,lam_error(:,1)];
+nu_rs_vec    = [nu_rs_vec,relative_error(:,3)];
+alpha_s_vec = [alpha_s_vec,relative_error(:,4)];
+lam_s_vec   = [lam_s_vec,lam_error(:,2)];
+GR_beta_vec = [GR_beta_vec,GR_hist(:,1)];
+b_beta_vec  = [b_beta_vec,relative_error(:,6)];
+E_beta_vec  = [E_beta_vec,relative_error(:,7)];
+GR_nu_vec   = [GR_nu_vec,GR_hist(:,2)];
+b_nu_vec    = [b_nu_vec,relative_error(:,8)];
+E_nu_vec    = [E_nu_vec,relative_error(:,9)];
 
 
+%%  Set colors
+
+
+
+%%  Plot comparison
+
+
+figure
 hold on
-fig = gcf;
-Conc_cell = {'0 \mu m','0.0313 \mu m','0.0625 \mu m','0.125 \mu m','0.25 \mu m','0.375 \mu m','0.5 \mu m','1.25 \mu m','2.5 \mu m','3.75 \mu m','5 \mu m'};
-for d = 1:length(Conc)
-    DATA_d = squeeze(DATA(:,d,:))';
-    DATA_median = median(DATA_d);
-    DATA_std    = std(DATA_d)/3;
-    errorbar(Time,DATA_median,DATA_std,'LineWidth',3)
-end
-legend(Conc_cell,'Location','northwest')
 
-ax2.FontSize = 20;
-ax2.FontWeight = 'bold';
-ntt = strcat('Average RE:', num2str(mean(relative_error)));
-title(ntt)
-xlabel('Time')
-ylabel('Total cell count')
+curr_x = 1;
+ax = gca;
+All_pos = [];
+XTLabels = {};
+
+
+
+%%  alpha_r
+
+Posi = [curr_x,curr_x+0.4];
+All_pos = [All_pos,curr_x+0.2];
+XTLabels{end+1} = "\boldmath$\alpha_r$";
+curr_x = curr_x + 1;
+bh = boxplot(alpha_r_vec,'Positions',Posi,'Symbol','o','OutlierSize',3,'Colors',[0,0,0]);
+
+set(bh, 'LineWidth',3)
+
+
+
+sig_cell = {Posi};
+sig_vec  = [ranksum(alpha_r_vec(:,1),alpha_r_vec(:,2))];
+H = sigstar(sig_cell,sig_vec);
+
+
+
+%%  Lam_r
+
+Posi = [curr_x,curr_x+0.4];
+All_pos = [All_pos,curr_x+0.2];
+XTLabels{end+1} = "\boldmath$\kappa_r$";
+curr_x = curr_x + 1;
+bh = boxplot(lam_r_vec,'Positions',Posi,'Symbol','o','OutlierSize',3,'Colors',[0,0,0]);
+
+set(bh, 'LineWidth',3)
+
+
+
+sig_cell = {Posi};
+sig_vec  = [ranksum(lam_r_vec(:,1),lam_r_vec(:,2))];
+H = sigstar(sig_cell,sig_vec);
+
+
+%%  nu_r
+
+Posi = [curr_x,curr_x+0.4];
+All_pos = [All_pos,curr_x+0.2];
+XTLabels{end+1} = "\boldmath$\nu_{rs}$";
+curr_x = curr_x + 1;
+bh = boxplot(nu_rs_vec,'Positions',Posi,'Symbol','o','OutlierSize',3,'Colors',[0,0,0]);
+
+set(bh, 'LineWidth',3)
+
+
+sig_cell = {Posi};
+sig_vec  = [ranksum(nu_rs_vec(:,1),nu_rs_vec(:,2))];
+H = sigstar(sig_cell,sig_vec);
+
+%%  alpha_s
+
+Posi = [curr_x,curr_x+0.4];
+All_pos = [All_pos,curr_x+0.2];
+XTLabels{end+1} = "\boldmath$\alpha_s$";
+curr_x = curr_x + 1;
+bh = boxplot(alpha_s_vec,'Positions',Posi,'Symbol','o','OutlierSize',3,'Colors',[0,0,0]);
+
+set(bh, 'LineWidth',3)
+
+
+sig_cell = {Posi};
+sig_vec  = [ranksum(alpha_s_vec(:,1),alpha_s_vec(:,2))];
+H = sigstar(sig_cell,sig_vec);
+
+%%  Lam_s
+
+Posi = [curr_x,curr_x+0.4];
+All_pos = [All_pos,curr_x+0.2];
+XTLabels{end+1} = "\boldmath$\kappa_s$";
+curr_x = curr_x + 1;
+bh = boxplot(lam_s_vec,'Positions',Posi,'Symbol','o','OutlierSize',3,'Colors',[0,0,0]);
+
+set(bh, 'LineWidth',3)
+
+
+sig_cell = {Posi};
+sig_vec  = [ranksum(lam_s_vec(:,1),lam_s_vec(:,2))];
+H = sigstar(sig_cell,sig_vec);
+
+
+%%  GR_beta
+
+Posi = [curr_x,curr_x+0.4];
+All_pos = [All_pos,curr_x+0.2];
+XTLabels{end+1} = "\boldmath$GR_{s,\beta}$";
+curr_x = curr_x + 1;
+bh = boxplot(GR_beta_vec,'Positions',Posi,'Symbol','o','OutlierSize',3,'Colors',[0,0,0]);
+
+set(bh, 'LineWidth',3)
+
+
+sig_cell = {Posi};
+sig_vec  = [ranksum(GR_beta_vec(:,1),GR_beta_vec(:,2))];
+H = sigstar(sig_cell,sig_vec);
+
+
+% %%  b_beta
+% 
+% Posi = [curr_x,curr_x+0.4];
+% All_pos = [All_pos,curr_x+0.2];
+% XTLabels{end+1} = "\boldmath$b_{s\beta}$";
+% curr_x = curr_x + 1;
+% boxplot(b_beta_vec,'Positions',Posi,'Symbol','o','OutlierSize',3,'Colors',[0,0,0])
+% 
+% 
+% sig_cell = {Posi};
+% sig_vec  = [ranksum(b_beta_vec(:,1),b_beta_vec(:,2))];
+% H = sigstar(sig_cell,sig_vec);
+% 
+% %%  E_beta
+% 
+% Posi = [curr_x,curr_x+0.4];
+% All_pos = [All_pos,curr_x+0.2];
+% XTLabels{end+1} = "\boldmath$E_{s\beta}$";
+% curr_x = curr_x + 1;
+% boxplot(E_beta_vec,'Positions',Posi,'Symbol','o','OutlierSize',3,'Colors',[0,0,0])
+% 
+% 
+% sig_cell = {Posi};
+% sig_vec  = [ranksum(E_beta_vec(:,1),E_beta_vec(:,2))];
+% H = sigstar(sig_cell,sig_vec);
+
+%%  GR_nu
+
+Posi = [curr_x,curr_x+0.4];
+All_pos = [All_pos,curr_x+0.2];
+XTLabels{end+1} = "\boldmath$GR_{s,\nu}$";
+curr_x = curr_x + 1;
+bh = boxplot(GR_nu_vec,'Positions',Posi,'Symbol','o','OutlierSize',3,'Colors',[0,0,0]);
+
+set(bh, 'LineWidth',3)
+
+
+sig_cell = {Posi};
+sig_vec  = [ranksum(GR_nu_vec(:,1),GR_nu_vec(:,2))];
+H = sigstar(sig_cell,sig_vec);
+
+
+% %%  b_nu
+% 
+% Posi = [curr_x,curr_x+0.4];
+% All_pos = [All_pos,curr_x+0.2];
+% XTLabels{end+1} = "\boldmath$b_{s,\nu}$";
+% curr_x = curr_x + 1;
+% boxplot(b_nu_vec,'Positions',Posi,'Symbol','o','OutlierSize',3,'Colors',[0,0,0])
+% 
+% 
+% sig_cell = {Posi};
+% sig_vec  = [ranksum(b_nu_vec(:,1),b_nu_vec(:,2))];
+% H = sigstar(sig_cell,sig_vec);
+% 
+% 
+% %%  E_nu
+% 
+% Posi = [curr_x,curr_x+0.4];
+% All_pos = [All_pos,curr_x+0.2];
+% XTLabels{end+1} = "\boldmath$E_{s,\nu}$";
+% curr_x = curr_x + 1;
+% boxplot(E_nu_vec,'Positions',Posi,'Symbol','o','OutlierSize',3,'Colors',[0,0,0])
+% 
+% 
+% sig_cell = {Posi};
+% sig_vec  = [ranksum(E_nu_vec(:,1),E_nu_vec(:,2))];
+% H = sigstar(sig_cell,sig_vec);
+
+
+
+%% Coloring
+
+
+GR1_color = [254 129 125];
+GR2_color = [129 184 223];
+GR1_color = GR1_color./255;
+GR2_color = GR2_color./255;
+colors     = [GR1_color;GR2_color];
+
+boxObj=findobj(gca,'Tag','Box');
+for i=1:length(boxObj)
+    if mod(i,2) == 0
+        p1 = patch(boxObj(i).XData,boxObj(i).YData,colors(2,:),'FaceAlpha',0.5,'LineWidth',1.1);
+    else
+        p2 = patch(boxObj(i).XData,boxObj(i).YData,colors(1,:),'FaceAlpha',0.5,'LineWidth',1.1);
+    end
+end
+
+
+
+%% Modify the axis
+
+    
+    ax.XLim           = [0.5,curr_x];
+    
+    yline(0.2,'LineWidth',3)
+    ylabel('Relative Error')
+    ax.YLim           = [1e-4,1e3];
+    ax.YScale         = 'log';
+    ax.LineWidth      = 1.1;
+    ax.FontSize       = 25;
+    ax.FontName       = 'Arial';
+    ax.FontWeight     = 'bold';
+    ax.XTick          = All_pos;
+    ax.XTickLabel     = XTLabels;
+    % ax.Title.String   = title;
+    ax.Title.FontSize = 27;
+    set(ax,"TickLabelInterpreter",'latex')
+    % ax.TicklabelInterpreter = 'latex';
+    % ax.YLabel.String  = Y_label;
+    
+
+    legend([p1,p2],{'CLT Model','LLN Model'},'location','northwest')

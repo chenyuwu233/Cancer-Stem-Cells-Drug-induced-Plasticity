@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 # Set job time to 2 day.
-#SBATCH --time=2:00:00
+#SBATCH --time=8:00:00
 
 # Set a name for the job, visible in `squeue`
 #SBATCH --job-name="CSC_DIS_1"
@@ -29,4 +29,4 @@
 
 module load matlab
 
-matlab -nodisplay -nodesktop -nosplash < main_Point_Estimation.m
+matlab -nodisplay -nodesktop -nosplash < main_Point_Estimation_GS.m

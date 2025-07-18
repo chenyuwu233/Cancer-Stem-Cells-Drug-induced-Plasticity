@@ -26,14 +26,14 @@ function plot_vecs(vec_mat,vec_name,Y_LIM,Y_label,title,colors,test_cmd)
             boxplot(vec_mat,'Symbol','o','OutlierSize',3,'Colors',[0,0,0])
             ylim(Y_LIM)
             ax=gca;hold on;
-            ax.LineWidth=1.1;
-            ax.FontSize=25;
-            ax.FontName='Arial';
-            ax.FontWeight = 'bold';
-            ax.XTickLabel=vec_name;
-            ax.Title.String=title;
-            ax.Title.FontSize=27;
-            ax.YLabel.String=Y_label;
+            ax.LineWidth      = 1.1;
+            ax.FontSize       = 25;
+            ax.FontName       = 'Arial';
+            ax.FontWeight     = 'bold';
+            ax.XTickLabel     = vec_name;
+            ax.Title.String   = title;
+            ax.Title.FontSize = 27;
+            ax.YLabel.String  = Y_label;
 
             %% Width of Line
             lineObj=findobj(gca,'Type','Line');

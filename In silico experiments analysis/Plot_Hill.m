@@ -11,7 +11,7 @@ Hill =  b + (1-b)./(1+(Conc./E).^m);
 semilogx(Conc,Hill,'LineWidth',3)
 ax = gca;
 ax.FontSize = 16;
-% ax.FontWeight = 'bold';
-xlabel('Drug concentration levels')
+ax.FontWeight = 'bold';
+xlabel('Drug concentration levels (d)')
 ylabel('Hill equation')
 % title('Hill equation when $b >1$','Interpreter','latex')

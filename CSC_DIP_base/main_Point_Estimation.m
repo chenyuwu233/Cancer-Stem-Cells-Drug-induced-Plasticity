@@ -5,7 +5,9 @@ warning('off','MATLAB:integral:NonFiniteValue')
 
 %%
 
-seed_num = 61;
+for ii = 41:60
+
+seed_num = ii;
 
 rng(seed_num)
 
@@ -27,7 +29,7 @@ cmd  = 'CSC_DIS';
 beta_s_range      = [1e-3,0.9];
 beta_d_range      = [1e-3,0.5];
 lam_s_range       = [0,0.1];
-lam_d_range       = [0,0.5];
+lam_d_range       = [0,0.05];
 nu_dediff_range = [0,0.05];
 b_beta_range    = [0.8,0.9];
 b_nu_range      = [1+1e-6,1.1];
@@ -168,8 +170,8 @@ end
 
     
 
-save_name = strcat('Result/Test_',num2str(seed_num),'.mat');
+save_name = strcat('Result_GS/PE_CSC_DIS_',num2str(seed_num),'.mat');
 
 save(save_name)
 
-
+end

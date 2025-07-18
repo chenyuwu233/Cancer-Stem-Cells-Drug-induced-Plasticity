@@ -7,7 +7,7 @@ name = ["\boldmath$\alpha_r$","\boldmath$\beta_r$","\boldmath$\nu_{rs}$","\boldm
 
 % relative_error_a3(:,8) = []; %% temp
 
-sc = boxplot(relative_error_a3,name);
+sc = boxplot(relative_error_a3,name,'Symbol','o','OutlierSize',3,'Colors',[0,0,0]);
 set(sc,'LineWidth',3)
 xline([1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.6,10.5,11.5,12.5,13.5])
 ax   = gca;
@@ -23,3 +23,12 @@ yline(0.2,'LineWidth',3)
 ylabel('Relative error')
 ax.FontSize = 23;
 ax.FontWeight = 'bold';
+
+%% Coloring
+
+color1 = [129 184 223];
+color1 = color1./255;
+boxObj=findobj(gca,'Tag','Box');
+for i=1:length(boxObj)
+    p1 = patch(boxObj(i).XData,boxObj(i).YData,color1,'FaceAlpha',0.5,'LineWidth',1.1);
+end

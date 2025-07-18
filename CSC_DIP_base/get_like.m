@@ -153,7 +153,6 @@ function ret = get_like(DATA,x,Time,Conc,NR,NC,NT,s,cmd)
 %                 det(Sig_i(:,:,1))
 %                 det(Sig_i(:,:,2))
 %                 det(Vari)
-                % trace((DATA_i' - MM)*Var_ob_i_inv*(DATA_i' - MM)')
                 ret = ret + 1/2 * trace((DATA_i' - MM)*Var_ob_i_inv*(DATA_i' - MM)');
                 ret = ret + NR/2*log(det(2 * pi * Var_ob_i));
             end

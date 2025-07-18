@@ -68,12 +68,12 @@ tv_ub = 36;
 c_lb  = 0;
 c_ub  = 50;
 
-lb_DIP_Asy = [0,alpha_lb,beta_lb,0,b_beta_lb,E_lb,1,1,...
+lb_DIP_Asy = [0,alpha_lb,beta_lb,0,b_beta_lb,E_beta_lb,1,1,...
         1,alpha_lb,beta_lb,0,b_beta_lb,E_lb,b_nu_lb,E_lb,tv1_lb,tv_lb,c_lb];
 
 
 
-ub_DIP_Asy = [0,alpha_ub,beta_ub,0.5,b_beta_ub,E_ub,1,1,...
+ub_DIP_Asy = [0,alpha_ub,beta_ub,0.5,b_beta_ub,E_beta_ub,1,1,...
         1,alpha_ub,beta_ub,0.5,b_beta_ub,E_ub,b_nu_ub,E_ub,tv1_ub,tv_ub,c_ub];
 
 % 
@@ -108,7 +108,7 @@ params_hist_pe_DIP_Asy = [];
 
 parfor j = 1:num_optim
 %     try
-    [xx,ff,~,out,~,g,~]  = fmincon(func,x_init(j,:),[],[],[],[],lb_DIP,ub_DIP,[],options1); 
+    [xx,ff,~,out,~,g,~]  = fmincon(func,x_init(j,:),[],[],[],[],lb_DIP_Asy,ub_DIP_Asy,[],options1); 
     fval_hist_pe_DIP_Asy = [fval_hist_pe_DIP_Asy,ff];
     params_hist_pe_DIP_Asy = [params_hist_pe_DIP_Asy;xx];
 %     catch
@@ -121,12 +121,12 @@ opt_xx_pe_DIP_Asy = params_hist_pe_DIP_Asy(oi,:);
 %%
 
 
-lb_DIP_nAsy = [0,alpha_lb,beta_lb,0,b_beta_lb,E_lb,1,1,...
+lb_DIP_nAsy = [0,alpha_lb,beta_lb,0,b_beta_lb,E_beta_lb,1,1,...
         1,alpha_lb,beta_lb,0,b_beta_lb,E_lb,b_nu_lb,E_lb,tv1_lb,tv_lb,c_lb];
 
 
 
-ub_DIP_nAsy = [0,alpha_ub,beta_ub,0,b_beta_ub,E_ub,1,1,...
+ub_DIP_nAsy = [0,alpha_ub,beta_ub,0,b_beta_ub,E_beta_ub,1,1,...
         1,alpha_ub,beta_ub,0,b_beta_ub,E_ub,b_nu_ub,E_ub,tv1_ub,tv_ub,c_ub];
 
 x_init_DIP_nAsy = x_init;
@@ -143,7 +143,7 @@ params_hist_pe_DIP_nAsy = [];
 
 parfor j = 1:num_optim
 %     try
-    [xx,ff,~,out,~,g,~]  = fmincon(func,x_init_DIP_nAsy(j,:),[],[],[],[],lb_DIP_nNP,ub_DIP_nNP,[],options1); 
+    [xx,ff,~,out,~,g,~]  = fmincon(func,x_init_DIP_nAsy(j,:),[],[],[],[],lb_DIP_nAsy,ub_DIP_nAsy,[],options1); 
     fval_hist_pe_DIP_nAsy = [fval_hist_pe_DIP_nAsy,ff];
     params_hist_pe_DIP_nAsy = [params_hist_pe_DIP_nAsy;xx];
 %     catch
@@ -157,12 +157,12 @@ opt_xx_pe_DIP_nAsy = params_hist_pe_DIP_nAsy(oi,:);
 %%
 
 
-lb_nDIP_Asy = [0,alpha_lb,beta_lb,0,b_beta_lb,E_lb,1,1,...
+lb_nDIP_Asy = [0,alpha_lb,beta_lb,0,b_beta_lb,E_beta_lb,1,1,...
         1,alpha_lb,beta_lb,0,b_beta_lb,E_lb,1,1,tv1_lb,tv_lb,c_lb];
 
 
 
-ub_nDIP_Asy = [0,alpha_ub,beta_ub,0.5,b_beta_ub,E_ub,1,1,...
+ub_nDIP_Asy = [0,alpha_ub,beta_ub,0.5,b_beta_ub,E_beta_ub,1,1,...
         1,alpha_ub,beta_ub,0.5,b_beta_ub,E_ub,1,1,tv1_ub,tv_ub,c_ub];
 
 x_init_nDIP_Asy = x_init;
@@ -179,7 +179,7 @@ params_hist_pe_nDIP_Asy = [];
 
 parfor j = 1:num_optim
 %     try
-    [xx,ff,~,out,~,g,~]  = fmincon(func,x_init_nDIP_Asy(j,:),[],[],[],[],lb_nDIP,ub_nDIP,[],options1); 
+    [xx,ff,~,out,~,g,~]  = fmincon(func,x_init_nDIP_Asy(j,:),[],[],[],[],lb_nDIP_Asy,ub_nDIP_Asy,[],options1); 
     fval_hist_pe_nDIP_Asy = [fval_hist_pe_nDIP_Asy,ff];
     params_hist_pe_nDIP_Asy = [params_hist_pe_nDIP_Asy;xx];
 %     catch
@@ -192,12 +192,12 @@ opt_xx_pe_nDIP_Asy = params_hist_pe_nDIP_Asy(oi,:);
 %%
 
 
-lb_nDIP_nAsy = [0,alpha_lb,beta_lb,0,b_beta_lb,E_lb,1,1,...
+lb_nDIP_nAsy = [0,alpha_lb,beta_lb,0,b_beta_lb,E_beta_lb,1,1,...
         1,alpha_lb,beta_lb,0,b_beta_lb,E_lb,1,1,tv1_lb,tv_lb,c_lb];
 
 
 
-ub_nDIP_nAsy = [0,alpha_ub,beta_ub,0,b_beta_ub,E_ub,1,1,...
+ub_nDIP_nAsy = [0,alpha_ub,beta_ub,0,b_beta_ub,E_beta_ub,1,1,...
         1,alpha_ub,beta_ub,0,b_beta_ub,E_ub,1,1,tv1_ub,tv_ub,c_ub];
 
 x_init_nDIP_nAsy = x_init;
@@ -234,17 +234,17 @@ opt_xx_pe_nDIP_nNP = params_hist_pe_nDIP_nAsy(oi,:);
 num_par_DIP_Asy = sum(lb_DIP_Asy ~= ub_DIP_Asy);
 num_par_DIP_nAsy = sum(lb_DIP_nAsy ~= ub_DIP_nAsy);
 num_par_nDIP_Asy = sum(lb_nDIP_Asy ~= ub_nDIP_Asy);
-num_par_nDIP_nAsy = 8;
+num_par_nDIP_nAsy = 8;  % Since there is no Resistance cell for this case
 
-AIC_DIP = 2*num_par_DIP_Asy + 2*of_DIP;
-AIC_DIP_nNP = 2*num_par_DIP_nAsy + 2*of_DIP_nNP;
-AIC_nDIP = 2*num_par_nDIP_Asy + 2*of_nDIP; 
-AIC_nDIP_nNP = 2*num_par_nDIP_nAsy + 2*of_nDIP_nNP;
+AIC_DIP_Asy = 2*num_par_DIP_Asy + 2*of_DIP_Asy;
+AIC_DIP_nAsy = 2*num_par_DIP_nAsy + 2*of_DIP_nAsy;
+AIC_nDIP_Asy = 2*num_par_nDIP_Asy + 2*of_nDIP_Asy; 
+AIC_nDIP_nAsy = 2*num_par_nDIP_nAsy + 2*of_nDIP_nAsy;
 
-AICc_DIP = AIC_DIP + (2*num_par_DIP_Asy^2 + 2*num_par_DIP_Asy)/(29*6*4 - num_par_DIP_Asy - 1);
-AICc_DIP_nNP = AIC_DIP_nNP + (2*num_par_DIP_nAsy^2 + 2*num_par_DIP_nAsy)/(29*6*4 - num_par_DIP_nAsy - 1);
-AICc_nDIP = AIC_nDIP + (2*num_par_nDIP_Asy^2 + 2*num_par_nDIP_Asy)/(29*6*4 - num_par_nDIP_Asy - 1);
-AICc_nDIP_nNP = AIC_nDIP_nNP + (2*num_par_nDIP_nAsy^2 + 2*num_par_nDIP_nAsy)/(29*6*4 - num_par_nDIP_nAsy - 1);
+AICc_DIP_Asy = AIC_DIP + (2*num_par_DIP_Asy^2 + 2*num_par_DIP_Asy)/(29*6*4 - num_par_DIP_Asy - 1);
+AICc_DIP_nAsy = AIC_DIP_nNP + (2*num_par_DIP_nAsy^2 + 2*num_par_DIP_nAsy)/(29*6*4 - num_par_DIP_nAsy - 1);
+AICc_nDIP_Asy = AIC_nDIP + (2*num_par_nDIP_Asy^2 + 2*num_par_nDIP_Asy)/(29*6*4 - num_par_nDIP_Asy - 1);
+AICc_nDIP_nAsy = AIC_nDIP_nNP + (2*num_par_nDIP_nAsy^2 + 2*num_par_nDIP_nAsy)/(29*6*4 - num_par_nDIP_nAsy - 1);
 
 
     
